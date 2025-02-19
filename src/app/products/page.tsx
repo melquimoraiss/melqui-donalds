@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 
 const ProductPage = () => {
   return (
-    <div className="p-5 background bg-red-800 shadow-md">
+    <div className="background bg-red-800 p-5 shadow-md">
       <h1 className="text-white">products page</h1>;<Button>imbu</Button>
       <Input placeholder="bora cagar" />
     </div>
