@@ -9,7 +9,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "MELQUI Donalds",
+  title: "MELQUI Donald's",
   description: "cuida",
 };
 
