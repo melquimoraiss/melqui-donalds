@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { ClockIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -23,6 +24,24 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
   const [selectedCategory, setSelectedCategory] =
     useState<MenuCategoryWithProducts>(restaurant.menuCategories[0]);
 
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  // useEffect(() => {
+  //   setIsOpen(false);
+  // }, []);
+  useEffect(() => {
+    const fetchIsOpen = async () => {
+      try {
+        const res = await fetch("/api/is-open");
+        const data = await res.json();
+        setIsOpen(data.isOpen);
+      } catch (error) {
+        console.error("Erro ao buscar status de funcionamento:", error);
+      }
+    };
+
+    fetchIsOpen();
+  }, []);
+
   const handleCategoryClick = (category: MenuCategoryWithProducts) => {
     setSelectedCategory(category);
   };
@@ -30,7 +49,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
     return selectedCategory.id === category.id ? "default" : "secondary";
   };
   return (
-    <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl  bg-white p-5">
+    <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl bg-white p-5">
       <div className="p-5">
         <div className="flex items-center gap-3">
           <Image
@@ -44,9 +63,13 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
             <p className="text-xs opacity-60">{restaurant.description}</p>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-1 text-xs text-green-500">
+        <div
+          className={`mt-3 flex items-center gap-1 text-xs ${
+            isOpen ? "text-green-500" : "text-red-500"
+          }`}
+        >
           <ClockIcon size={12} />
-          <p>Aberto</p>
+          <p>{isOpen ? "Aberto" : "Fechado"}</p>
         </div>
       </div>
 
@@ -69,8 +92,6 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
 
       <h1 className="px-5 pt-2 font-semibold">{selectedCategory.name}</h1>
       <Products products={selectedCategory.products} />
-      
-
     </div>
   );
 };
